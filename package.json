@@ -1,0 +1,47 @@
+{
+  "name": "cfg-stats",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "description": "",
+  "author": {
+    "name": "Tom Fili"
+  },
+  "keywords": [
+  ],
+  "homepage": "https://github.com/tfili/cfg-stats",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tfili/cfg-stats.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tfili/cfg-stats/issues"
+  },
+  "main": "index.js",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "dependencies": {
+    "@turf/turf": "^3.7.0",
+    "bluebird": "^3.4.6",
+    "cesium": "^1.30.0",
+    "express": "^4.14.0",
+    "fs-extra": "^2.0.0",
+    "nodemon": "^1.11.0",
+    "progress": "^1.1.8",
+    "request": "^2.79.0",
+    "sqlite3": "^3.1.8",
+    "yargs": "^6.5.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.0.4",
+    "jshint": "^2.9.4",
+    "jshint-stylish": "^2.2.1"
+  },
+  "bin": {
+  },
+  "scripts": {
+    "start": "nodemon --watch bin --watch lib --watch index.js server.js",
+    "jsHint": "gulp jsHint"
+  }
+}
