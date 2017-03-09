@@ -2,8 +2,8 @@
 node_modules
 npm-debug.log
 
-# TypeScript definitions
-typings
+# data directory
+data
 
 # WebStorm user-specific
 .idea/workspace.xml

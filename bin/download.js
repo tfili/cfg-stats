@@ -145,8 +145,7 @@ openPromise
                                     return;
                                 }
 
-                                resolve(false);
-                                //resolve(true);
+                                resolve(true);
                             });
                     });
                 })
