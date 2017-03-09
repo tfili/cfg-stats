@@ -25,7 +25,7 @@ var SEX = {
 //                         'Latin America', 'Mid Atlantic', 'North Central', 'North East', 'Northern California',
 //                         'North West', 'South Central', 'South East', 'Southern California', 'South West'];
 
-var url = 'https://games.crossfit.com/competitions/api/v1/competitions/open/2017/leaderboards?competition=1&year=2017&division={SEX}&scaled=0&sort=0&fittest=1&fittest1=0&occupation=0&page={PAGE}';
+var url = 'https://games.crossfit.com/competitions/api/v1/competitions/open/2017/leaderboards?competition=1&year={YEAR}&division={SEX}&scaled=0&sort=0&fittest=1&fittest1=0&occupation=0&page={PAGE}';
 var year = 2017;
 
 var db;
@@ -54,10 +54,10 @@ openPromise
         // Create database tables
         dbExec = Promise.promisify(db.exec, {context: db});
 
-        var sql = ['CREATE TABLE IF NOT EXISTS athletes(id INTEGER PRIMARY KEY, name TEXT, affiliate INTEGER, sex INTEGER, \
+        var sql = ['CREATE TABLE IF NOT EXISTS athletes(id TEXT PRIMARY KEY, name TEXT, affiliate INTEGER, sex INTEGER, \
                   age INTEGER, height REAL, weight REAL, picture TEXT)',
 
-                   'CREATE TABLE IF NOT EXISTS scores(athlete_id INTEGER, year INTEGER, workout INTEGER, score REAL, \
+                   'CREATE TABLE IF NOT EXISTS scores(athlete_id TEXT, year INTEGER, workout INTEGER, score REAL, \
                    tiebreak REAL, PRIMARY KEY (athlete_id, year, workout), FOREIGN KEY(athlete_id) REFERENCES athletes(id))'];
 
         return Promise.map(sql, function(s) {
@@ -103,6 +103,7 @@ openPromise
     .then(function() {
         var totalPages = 0;
         var pageCount = 0;
+        var users = {};
         return Promise.map([SEX.MALE, SEX.FEMALE], function(sex) {
             var page = 1;
             var u = url.replace('{SEX}', sex).replace('{YEAR}', year);
@@ -129,7 +130,7 @@ openPromise
                         }
 
                         Promise.map(info.athletes, function(athleteInfo) {
-                            var athleteId = dataParsers.id(athleteInfo.userid);
+                            var athleteId = athleteInfo.userid;
                             return Promise.join(insertAthlete(athleteId, athleteInfo.name,
                                 dataParsers.affiliate(athleteInfo.affiliateid), athleteInfo.division, athleteInfo.age,
                                 dataParsers.height(athleteInfo.height), dataParsers.weight(athleteInfo.weight),
