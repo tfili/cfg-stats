@@ -47,9 +47,8 @@ database.readyPromise
     })
     .then(function () {
         // MEN/WOMEN include 16-17, 35-39, 40-44, 45-49, and 50-54
-        //var divisionToQuery = [Division.MEN, Division.WOMEN, Division.BOYS_14_15, Division.GIRLS_14_15, Division.MEN_55_59,
-        //    Division.WOMEN_55_59, Division.MEN_60, Division.WOMEN_60];
-        var divisionToQuery = [Division.WOMEN_60];
+        var divisionToQuery = [Division.MEN, Division.WOMEN, Division.BOYS_14_15, Division.GIRLS_14_15, Division.MEN_55_59,
+            Division.WOMEN_55_59, Division.MEN_60, Division.WOMEN_60];
 
         var progress = new Progress('Populate Athletes', divisionToQuery.length);
         return Promise.map(divisionToQuery, function (division) {
