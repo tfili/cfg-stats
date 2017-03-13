@@ -10,6 +10,7 @@ var Database = require('../lib/Database');
 var Division = require('../lib/Division');
 var Progress = require('../lib/Progress');
 var requestAthletes = require('../lib/requestAthletes');
+var requestAffiliates = require('../lib/requestAffiliates');
 
 var argv = yargs
     .usage('download.js [OPTIONS]')
@@ -33,10 +34,6 @@ var argv = yargs
     })
     .argv;
 
-// var REGION_STRINGS = ['Worldwide', 'Africa', 'Asia', 'Australia', 'Canada East', 'Canada West', 'Central East', 'Europe',
-//                         'Latin America', 'Mid Atlantic', 'North Central', 'North East', 'Northern California',
-//                         'North West', 'South Central', 'South East', 'Southern California', 'South West'];
-
 var year = argv.year;
 
 var dbPath = argv.output;
@@ -53,15 +50,33 @@ database.readyPromise
         var divisionToQuery = [Division.MEN, Division.WOMEN, Division.BOYS_14_15, Division.GIRLS_14_15, Division.MEN_55_59,
             Division.WOMEN_55_59, Division.MEN_60, Division.WOMEN_60];
 
-        var progress = new Progress(divisionToQuery.length);
+        var progress = new Progress('Populate Athletes', divisionToQuery.length);
         return Promise.map(divisionToQuery, function (division) {
-            return requestAthletes(division, year, progress, function(athlete) {
+            return requestAthletes(division, year, progress, function (athlete) {
                 return database.addAthlete(athlete);
             });
         });
     })
     .then(function () {
-        console.log('Done!');
+        return database.end();
+    })
+    .then(function () {
+        return database.begin();
+    })
+    .then(function () {
+        return database.getAffiliatesWithAthletes();
+    })
+    .then(function (affiliates) {
+        var progress = new Progress('Populate Affiliates');
+        progress.add(affiliates.length);
+        return requestAffiliates(affiliates, function (affiliate) {
+            return database.addAffiliate(affiliate)
+                .then(function () {
+                    progress.tick();
+                });
+        });
+    })
+    .then(function () {
         return database.destroy();
     })
     .catch(function (error) {

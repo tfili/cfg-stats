@@ -30,6 +30,7 @@
     "progress": "^1.1.8",
     "request": "^2.79.0",
     "sqlite3": "^3.1.8",
+    "xmldom": "^0.1.27",
     "yargs": "^6.5.0"
   },
   "devDependencies": {
